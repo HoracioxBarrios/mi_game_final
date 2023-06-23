@@ -6,6 +6,9 @@ from piso import *
 from modo_dev import *
 pygame.init()
 
+pygame.mixer.music.load('sounds\intro_dbz.mp3')
+pygame.mixer.music.play(-1)
+pygame.mixer.music.set_volume(0.1)
 def generar_pisos(path: str, tipo, y, inicio, fin):
     lista_pisos: list[Piso] = []
     for x in range(inicio, fin, 100):
@@ -31,7 +34,6 @@ lista_piso: list[Piso] = generar_pisos("sprites/StoneBlock.png", 'plataforma', 5
 lista_piso2 = generar_pisos("sprites/StoneBlock.png", 'piso', 700, 0, ANCHO)
 lista_piso.extend(lista_piso2)
 
-print(lista_piso)
 
 while (True):
 

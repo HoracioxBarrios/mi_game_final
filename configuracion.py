@@ -12,4 +12,4 @@ pos_init_y_personaje = 0
 velocidad_caminar = 5
 speed_correr_personaje = 8
 gravedad = 1
-potencia_salto = -30
+potencia_salto = -20

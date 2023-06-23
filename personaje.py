@@ -3,6 +3,14 @@ from utilidades import *
 from animation import *
 from configuracion import *
 from piso import *
+from pydub import AudioSegment
+from pydub.playback import play
+pygame.init()
+sonido_pasos = pygame.mixer.Sound('sounds/correr.wav')
+sonido_poder = pygame.mixer.Sound('sounds/poder.wav')
+sonido_salto = pygame.mixer.Sound('sounds/salto.wav')
+           
+
 class Personaje:
     def __init__(self) -> None:
         self.quieto_r = get_surface_form_sprite_sheet("sprites\goku2.png", 9, 6, 0, 0, 2, True)
@@ -11,7 +19,7 @@ class Personaje:
         self.corriendo_l = get_surface_form_sprite_sheet("sprites\goku2.png", 9, 6, 0, 6, 8, True)
         self.saltando_r = get_surface_form_sprite_sheet("sprites\goku2.png", 9, 6, 0, 6, 7, False)
         self.saltando_l = get_surface_form_sprite_sheet("sprites\goku2.png", 9, 6, 0, 6, 7, True)
-
+        self.sonido = AudioSegment.from_wav('sounds/correr.wav') 
         self.frame = 0
         self.gravedad = gravedad
         self.velocidad_caminar = velocidad_caminar
@@ -28,6 +36,7 @@ class Personaje:
         self.mirando_derecha = True
         self.esta_en_aire = True
         ############################
+        self.time_sound = 20
         #Creacion inicial del rectangulo con superficie
         self.animacion = self.quieto_r
         self.imagen = self.animacion[self.frame]#el frame inicia arranca en 0, por ende se renderiza la pocision 0 de la lista de animaciones
@@ -55,7 +64,6 @@ class Personaje:
                     if(not self.mirando_derecha and not self.esta_caminando):
                         self.cambiar_animacion(self.quieto_r)
                     self.esta_caminando = True
-                    self.cambiar_animacion(self.corriendo_r)
                     self.mirando_derecha = True 
                     self.desplazamiento_x = self.velocidad_caminar
             case "caminar_l":
@@ -68,6 +76,7 @@ class Personaje:
                     self.desplazamiento_x = -self.velocidad_caminar
     def quieto(self):
         self.esta_caminando = False
+        sonido_pasos.stop()
         if self.mirando_derecha:
             self.cambiar_animacion(self.quieto_r)
         else:
@@ -77,6 +86,8 @@ class Personaje:
     def saltar(self):
         if not self.esta_en_aire:
             self.esta_en_aire = True
+            sonido_salto.set_volume(0.1)
+            sonido_salto.play()
             self.desplazamiento_y = self.potencia_salto
             if self.mirando_derecha:
                 self.cambiar_animacion(self.saltando_r)
@@ -93,31 +104,44 @@ class Personaje:
 
 
     def updater(self, lista_pisos: list[Piso]):
-
         self.verificar_desplazamiento_rectangulo_x()
         self.verificar_desplazamiento_rectangulo_y()
-
         self.aplicar_gravedad(lista_pisos)
         self.verificar_fames()
+        if(self.esta_caminando and self.time_sound <= 0 and not self.esta_en_aire):
+            sonido_pasos.set_volume(0.2)
+            sonido_pasos.play()
+            self.time_sound = 10
+        else:
+            self.time_sound -= 1
+
+        print(self.time_sound)
 
     def aplicar_gravedad(self, lista_pisos:list[Piso]):
         if(self.esta_en_aire):
-
+            sonido_pasos.stop()
             if self.desplazamiento_y + gravedad < self.limite_altura_salto:
                 self.desplazamiento_y += gravedad
+            #Verificamos colision con los pisos
+        self.verificar_colision(lista_pisos)
             
-            #Verificamos colision con los pisos       
-            self.verificar_colision(lista_pisos)
-                    
-    def verificar_colision(self, lista_pisos: list[Piso]):
-        
-        for piso in lista_pisos:
-            if self.diccionario_rectangulo_colisiones["lado_abajo"].colliderect(piso.colisiones_rectangulo_princial["lado_arriba"]):  
-                # self.rectangulo_principal.bottom = piso.rectangulo_principal.top
-                self.diccionario_rectangulo_colisiones["lado_abajo"].top = self.diccionario_rectangulo_colisiones["main"].bottom
-                self.esta_en_aire = False
-                self.desplazamiento_y = 0
-                break
+
+    def verificar_colision(self, lista_pisos:list[Piso]):
+            # self.rectangulo_principal.bottom = piso.rectangulo_principal.top
+            for piso in lista_pisos:       
+                colisiono = self.diccionario_rectangulo_colisiones["lado_abajo"].colliderect(piso.colisiones_rectangulo_princial["lado_arriba"])
+                if(colisiono):
+                    self.diccionario_rectangulo_colisiones["lado_abajo"].top = self.diccionario_rectangulo_colisiones["main"].bottom
+                    self.esta_en_aire = False
+                    self.desplazamiento_y = 0
+                    if(self.esta_caminando and self.mirando_derecha):
+                        self.cambiar_animacion(self.corriendo_r)
+                    elif(self.esta_caminando and not self.mirando_derecha):
+                        self.cambiar_animacion(self.corriendo_l)
+                    break
+                else:
+                    self.esta_en_aire = True
+                
     
     def verificar_fames(self):
         if (self.frame < len(self.animacion) -1):
