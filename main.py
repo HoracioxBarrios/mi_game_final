@@ -5,7 +5,7 @@ from personaje import *
 from piso import *
 from modo_dev import *
 pygame.init()
-
+# cambio
 pygame.mixer.music.load('sounds\intro_dbz.mp3')
 pygame.mixer.music.play(-1)
 pygame.mixer.music.set_volume(0.1)
