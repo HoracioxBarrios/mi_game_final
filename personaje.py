@@ -65,14 +65,15 @@ class Personaje:
                         self.cambiar_animacion(self.quieto_r)
                     self.esta_caminando = True
                     self.mirando_derecha = True 
+                    self.cambiar_animacion(self.corriendo_r)
                     self.desplazamiento_x = self.velocidad_caminar
             case "caminar_l":
                 if not self.esta_en_aire:
                     if(self.mirando_derecha and not self.esta_caminando):
-                        self.cambiar_animacion(self.quieto_l)
+                        self.cambiar_animacion(self.quieto_l)                
                     self.esta_caminando = True
                     self.cambiar_animacion(self.corriendo_l)
-                    self.mirando_derecha = not self.mirando_derecha
+                    self.mirando_derecha = False
                     self.desplazamiento_x = -self.velocidad_caminar
     def quieto(self):
         self.esta_caminando = False

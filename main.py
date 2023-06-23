@@ -24,9 +24,7 @@ relog = pygame.time.Clock()
 fondo = pygame.image.load("location\game_background_1.png")
 fondo = pygame.transform.scale(fondo, (ANCHO, ALTO))
 
-color_blue = (0,0,255)
-color_rojo = (255,0,0)
-color_green = (0,255,0)
+
 personaje = Personaje()
 
 lista_piso: list[Piso] = generar_pisos("sprites/StoneBlock.png", 'plataforma', 500, 200, 400)
@@ -42,7 +40,7 @@ while (True):
             pygame.quit()
             sys.exit()
         elif evento.type == pygame.KEYDOWN:
-            if evento.key == pygame.K_x:
+            if evento.key == pygame.K_TAB:
                 cambiar_modo()
         teclas = pygame.key.get_pressed()
 
@@ -73,10 +71,10 @@ while (True):
             pygame.draw.rect(screen, color_rojo, piso.colisiones_rectangulo_princial["lado_derecha"], 3)     
 
             pygame.draw.rect(screen, color_blue, personaje.rectangulo_principal, 3)
-            pygame.draw.rect(screen, color_rojo, personaje.diccionario_rectangulo_colisiones["lado_arriba"], 3)
-            pygame.draw.rect(screen, color_rojo, personaje.diccionario_rectangulo_colisiones["lado_abajo"], 3)
-            pygame.draw.rect(screen, color_rojo, personaje.diccionario_rectangulo_colisiones["lado_izquierda"], 3)
-            pygame.draw.rect(screen, color_rojo, personaje.diccionario_rectangulo_colisiones["lado_derecha"], 3) 
+            # pygame.draw.rect(screen, color_rojo, personaje.diccionario_rectangulo_colisiones["lado_arriba"], 3)
+            # pygame.draw.rect(screen, color_rojo, personaje.diccionario_rectangulo_colisiones["lado_abajo"], 3)
+            # pygame.draw.rect(screen, color_rojo, personaje.diccionario_rectangulo_colisiones["lado_izquierda"], 3)
+            # pygame.draw.rect(screen, color_rojo, personaje.diccionario_rectangulo_colisiones["lado_derecha"], 3) 
 
     pygame.display.flip()
     screen.blit(fondo, fondo.get_rect())
