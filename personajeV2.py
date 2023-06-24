@@ -31,7 +31,7 @@ class Personaje:
         ############################
         self.esta_caminando = False
         self.orientacion_x = 1
-        self.esta_en_aire = True
+        self.esta_en_aire = False
         self.dx = 0
         self.dy = 0
         ############################
@@ -46,7 +46,7 @@ class Personaje:
         self.pos_x = 0
         self.pos_y = 0
         self.rectangulo_principal.x = 50
-        self.rectangulo_principal.y = 0
+        self.rectangulo_principal.y = 650
         ################################
         self.diccionario_rectangulo_colisiones = obtener_rectangulos_colision(self.rectangulo_principal)
 
@@ -58,7 +58,7 @@ class Personaje:
             case "caminar_l":
                 self.caminar(accion)
             case "saltar":
-                self.saltar(accion)
+                self.saltar()
             case "quieto":
                 self.quieto()
     def caminar(self, accion):
@@ -71,7 +71,7 @@ class Personaje:
                 self.orientacion_x = -1
                 self.cambiar_animacion(self.corriendo_l)
                 self.desplazamiento_x = -self.velocidad_caminar
-    def saltar(self, accion):
+    def saltar(self):
         if(not self.esta_en_aire):
             self.esta_en_aire = True
             if(self.orientacion_x == 1):
@@ -86,8 +86,11 @@ class Personaje:
         if(not self.esta_en_aire):
             if(self.orientacion_x == 1):
                 self.desplazamiento_x = 0
-            else:
+                self.cambiar_animacion(self.quieto_r)
+            elif(self.orientacion_x == -1):
                 self.desplazamiento_x = 0
+                self.cambiar_animacion(self.quieto_l)
+
     def updater(self, screen_height, pisos, screen):
         self.dx = self.desplazamiento_x
         self.dy = 0
@@ -101,10 +104,22 @@ class Personaje:
         self.dy += self.vel_y
         # print('vel_y',self.vel_y)
         # print('dy',dy)
+        print(self.dy)
+        print(self.esta_en_aire)
+
+        if(self.dy > 1):
+            self.esta_en_aire = True
+            if(self.orientacion_x == 1):
+                self.cambiar_animacion(self.saltando_r)
+            else:
+                self.cambiar_animacion(self.saltando_l)
+
+            
         ########################
         for piso in pisos:
             if piso[1].colliderect(self.rectangulo_principal.x + self.dx, self.rectangulo_principal.y, self.ancho_imagen, self.alto_imagen):
                 self.dx = 0
+
             if piso[1].colliderect(self.rectangulo_principal.x, self.rectangulo_principal.y + self.dy, self.ancho_imagen, self.alto_imagen):
                 # Check if below the ground (jumping)
                 if self.vel_y < 0:
@@ -115,10 +130,12 @@ class Personaje:
                     self.dy = piso[1].top - self.rectangulo_principal.bottom
                     self.vel_y = 0
                     self.esta_en_aire = False
+            
+
+                        
 
 
-
-
+                
         ########################
         self.rectangulo_principal.y += self.dy
         self.rectangulo_principal.x += self.dx
