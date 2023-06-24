@@ -22,7 +22,7 @@ class Personaje:
         self.frame = 0
         self.gravedad = 1
         self.velocidad_caminar = 6
-        self.potencia_salto = 10
+        self.potencia_salto = 20
         self.limite_altura_salto = 10
         ###########################
         self.desplazamiento_x = 0
@@ -65,17 +65,22 @@ class Personaje:
         if(not self.esta_en_aire):
             if(accion == "caminar_r"):
                 self.orientacion_x = 1
-                self.desplazamiento_x = 5
+                self.cambiar_animacion(self.corriendo_r)
+                self.desplazamiento_x = self.velocidad_caminar
             else:
                 self.orientacion_x = -1
-                self.desplazamiento_x = -5
+                self.cambiar_animacion(self.corriendo_l)
+                self.desplazamiento_x = -self.velocidad_caminar
     def saltar(self, accion):
         if(not self.esta_en_aire):
             self.esta_en_aire = True
             if(self.orientacion_x == 1):
-                self.vel_y = -15
+                self.vel_y = -self.potencia_salto
+                self.cambiar_animacion(self.saltando_r)
             else:
-                self.vel_y  = -15
+                self.vel_y  = -self.potencia_salto
+                self.cambiar_animacion(self.saltando_l)
+
 
     def quieto(self):
         if(not self.esta_en_aire):
@@ -86,6 +91,7 @@ class Personaje:
     def updater(self, screen_height, pisos, screen):
         self.dx = self.desplazamiento_x
         self.dy = 0
+        self.verificar_frames()
         ###################
         self.vel_y += 1
         ###################
@@ -132,5 +138,7 @@ class Personaje:
             self.frame += 1
         else:
             self.frame = 0
+    def cambiar_animacion(self, nueva_lista_animaciones: list[pygame.Rect]):
+        self.animacion = nueva_lista_animaciones
 
         
