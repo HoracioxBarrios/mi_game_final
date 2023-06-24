@@ -6,9 +6,9 @@ from piso import *
 from pydub import AudioSegment
 from pydub.playback import play
 pygame.init()
-sonido_pasos = pygame.mixer.Sound('sounds/correr.wav')
-sonido_poder = pygame.mixer.Sound('sounds/poder.wav')
-sonido_salto = pygame.mixer.Sound('sounds/salto.wav')
+sonido_pasos = pygame.mixer.Sound('sounds\Efectos DBz\correr.wav')
+sonido_poder = pygame.mixer.Sound('sounds\Efectos DBz\poder.wav')
+sonido_salto = pygame.mixer.Sound('sounds\Efectos DBz\salto.wav')
            
 
 class Personaje:
@@ -19,7 +19,7 @@ class Personaje:
         self.corriendo_l = get_surface_form_sprite_sheet("sprites\goku2.png", 9, 6, 0, 6, 8, True)
         self.saltando_r = get_surface_form_sprite_sheet("sprites\goku2.png", 9, 6, 0, 6, 7, False)
         self.saltando_l = get_surface_form_sprite_sheet("sprites\goku2.png", 9, 6, 0, 6, 7, True)
-        self.sonido = AudioSegment.from_wav('sounds/correr.wav') 
+        self.sonido = AudioSegment.from_wav('sounds\Efectos DBz\correr.wav') 
         self.frame = 0
         self.gravedad = gravedad
         self.velocidad_caminar = velocidad_caminar
