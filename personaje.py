@@ -101,13 +101,13 @@ class Personaje:
         dibuja en pantalla
         '''
         self.dibijar_personaje(screen)
-        self.dibujar_plataforma(screen, lista_pisos)
+        # self.dibujar_plataforma(screen, lista_pisos)
 
 
     def updater(self, lista_pisos: list[Piso]):
         self.verificar_desplazamiento_rectangulo_x()
         self.verificar_desplazamiento_rectangulo_y()
-        self.aplicar_gravedad(lista_pisos)
+        # self.aplicar_gravedad(lista_pisos)
         self.verificar_fames()
         if(self.esta_caminando and self.time_sound <= 0 and not self.esta_en_aire):
             sonido_pasos.set_volume(0.2)
@@ -124,7 +124,7 @@ class Personaje:
             if self.desplazamiento_y + gravedad < self.limite_altura_salto:
                 self.desplazamiento_y += gravedad
             #Verificamos colision con los pisos
-        self.verificar_colision(lista_pisos)
+        # self.verificar_colision(lista_pisos)
             
 
     def verificar_colision(self, lista_pisos:list[Piso]):
@@ -172,6 +172,7 @@ class Personaje:
         for lado in self.diccionario_rectangulo_colisiones:
             self.diccionario_rectangulo_colisiones[lado].y += self.desplazamiento_y
 
+    
 
 
  

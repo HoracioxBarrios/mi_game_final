@@ -2,7 +2,7 @@ import pygame
 import asyncio
 from animation import *
 from configuracion import *
-
+import json
 def get_surface_form_sprite_sheet(path, columnas, filas, cortar_en_fila: int, cortar_columna_desde=0, cortar_columna_hasta=0, flip=False):
     lista = []
     superficie_imagen = pygame.image.load(path)
@@ -51,19 +51,14 @@ async def animationControler(times: list[int], frame: int):
     for time in times:
         asyncio.sleep(time)
 
+def dibujar_grid(screen, color, tile_size, width_screen, height_screen, margen):
+    for c in range(21):
+		#vertical lines
+        pygame.draw.line(screen, color, (c * tile_size, 0), (c * tile_size, height_screen - margen))
+        #horizontal lines
+        pygame.draw.line(screen, color, (0, c * tile_size), (width_screen, c * tile_size))
 
-def crear_dicc_animaciones(listAnimations: list[Animation]):
-    aux_dict_animations = {}
-    print(listAnimations)
-    # for animation in listAnimations:
-    #     aux_dict_animations[animation["name"]] = get_surface_form_sprite_sheet(
-    #         animation["path"], 
-    #         animation["columns"], 
-    #         animation["rows"],
-    #         animation["cut_row"],
-    #         animation["from_column_cut"],
-    #         animation["up_column_cut"],
-    #         animation["flip"],
-    #     )
-    # return aux_dict_animations
-
+def leerJson(path):
+    with open(path, 'r') as archivo:
+        contenido = json.load(archivo)
+    return contenido
