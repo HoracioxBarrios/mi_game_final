@@ -7,9 +7,9 @@ from pydub import AudioSegment
 from pydub.playback import play
 pygame.init()
 
-sonido_pasos = pygame.mixer.Sound('sounds/correr.wav')
-sonido_poder = pygame.mixer.Sound('sounds/poder.wav')
-sonido_salto = pygame.mixer.Sound('sounds/salto.wav')
+sonido_pasos = pygame.mixer.Sound('sounds\Efectos DBz/correr.wav')
+sonido_poder = pygame.mixer.Sound('sounds\Efectos DBz/poder.wav')
+sonido_salto = pygame.mixer.Sound('sounds\Efectos DBz/salto.wav')
 
 class Personaje:
     def __init__(self) -> None:
@@ -21,7 +21,7 @@ class Personaje:
         self.saltando_l = get_surface_form_sprite_sheet("sprites\goku2.png", 9, 6, 0, 6, 7, True)
         self.frame = 0
         self.gravedad = 1
-        self.velocidad_caminar = 6
+        self.velocidad_caminar = 10
         self.potencia_salto = 20
         self.limite_altura_salto = 10
         ###########################
@@ -67,13 +67,26 @@ class Personaje:
                 self.orientacion_x = 1
                 self.cambiar_animacion(self.corriendo_r)
                 self.desplazamiento_x = self.velocidad_caminar
+                self.esta_caminando = True
             else:
                 self.orientacion_x = -1
                 self.cambiar_animacion(self.corriendo_l)
                 self.desplazamiento_x = -self.velocidad_caminar
+                self.esta_caminando = True
+            
+    def controlar_sonido_caminar(self):
+        if(self.esta_caminando and self.time_sound <= 0 and not self.esta_en_aire):
+                sonido_pasos.set_volume(0.2)
+                sonido_pasos.play()
+                self.time_sound = 7
+        else:
+            self.time_sound -= 1
+            
     def saltar(self):
         if(not self.esta_en_aire):
             self.esta_en_aire = True
+            sonido_salto.set_volume(0.1)
+            sonido_salto.play()
             if(self.orientacion_x == 1):
                 self.vel_y = -self.potencia_salto
                 self.cambiar_animacion(self.saltando_r)
@@ -84,14 +97,17 @@ class Personaje:
 
     def quieto(self):
         if(not self.esta_en_aire):
+            self.esta_caminando = False
             if(self.orientacion_x == 1):
                 self.desplazamiento_x = 0
                 self.cambiar_animacion(self.quieto_r)
             elif(self.orientacion_x == -1):
                 self.desplazamiento_x = 0
                 self.cambiar_animacion(self.quieto_l)
+            
 
     def updater(self, screen_height, pisos, screen):
+        self.controlar_sonido_caminar()
         self.dx = self.desplazamiento_x
         self.dy = 0
         self.verificar_frames()
@@ -104,8 +120,8 @@ class Personaje:
         self.dy += self.vel_y
         # print('vel_y',self.vel_y)
         # print('dy',dy)
-        print(self.dy)
-        print(self.esta_en_aire)
+        # print(self.dy)
+        # print(self.esta_en_aire)
 
         if(self.dy > 1):
             self.esta_en_aire = True
@@ -113,8 +129,8 @@ class Personaje:
                 self.cambiar_animacion(self.saltando_r)
             else:
                 self.cambiar_animacion(self.saltando_l)
-
-            
+        
+        
         ########################
         for piso in pisos:
             if piso[1].colliderect(self.rectangulo_principal.x + self.dx, self.rectangulo_principal.y, self.ancho_imagen, self.alto_imagen):
@@ -130,8 +146,8 @@ class Personaje:
                     self.dy = piso[1].top - self.rectangulo_principal.bottom
                     self.vel_y = 0
                     self.esta_en_aire = False
-            
-
+                    
+        
                         
 
 
@@ -145,10 +161,21 @@ class Personaje:
             self.dy = 0
 
         self.dibujar_en_pantalla(screen)
+        
+        
+       #rompia:  index fuera de rango
+    # def dibujar_en_pantalla(self, screen):
+    #     self.imagen = self.animacion[self.frame]
+    #     screen.blit(self.imagen, self.rectangulo_principal)
+
     def dibujar_en_pantalla(self, screen):
+        if self.frame >= len(self.animacion):
+            self.frame = 0
         self.imagen = self.animacion[self.frame]
         screen.blit(self.imagen, self.rectangulo_principal)
-
+    
+        
+        
         
     def verificar_frames(self):
         if (self.frame < len(self.animacion) -1):
