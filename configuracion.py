@@ -1,7 +1,7 @@
 ANCHO = 1500
 ALTO = 800
 
-FPS = 10
+FPS = 60
 
 
 

@@ -62,7 +62,6 @@ class Personaje:
             case "quieto":
                 self.quieto()
     def caminar(self, accion):
-        print(accion)
         if(not self.esta_en_aire):
             if(accion == "caminar_r"):
                 self.orientacion_x = 1
@@ -71,13 +70,12 @@ class Personaje:
                 self.orientacion_x = -1
                 self.desplazamiento_x = -5
     def saltar(self, accion):
-        print(accion)
         if(not self.esta_en_aire):
             self.esta_en_aire = True
             if(self.orientacion_x == 1):
-                self.vel_y = -10
+                self.vel_y = -15
             else:
-                self.vel_y  = -10
+                self.vel_y  = -15
 
     def quieto(self):
         if(not self.esta_en_aire):
@@ -90,7 +88,6 @@ class Personaje:
         self.dy = 0
         ###################
         self.vel_y += 1
-        
         ###################
         if self.vel_y > 10:
             self.vel_y = 10
@@ -103,17 +100,15 @@ class Personaje:
             if piso[1].colliderect(self.rectangulo_principal.x + self.dx, self.rectangulo_principal.y, self.ancho_imagen, self.alto_imagen):
                 self.dx = 0
             if piso[1].colliderect(self.rectangulo_principal.x, self.rectangulo_principal.y + self.dy, self.ancho_imagen, self.alto_imagen):
-
-            # check if below the ground i.e. jumping
+                # Check if below the ground (jumping)
                 if self.vel_y < 0:
                     self.dy = piso[1].bottom - self.rectangulo_principal.top
                     self.vel_y = 0
-                #check if above the ground i.e. falling
-                if self.vel_y >= 0:
+                # Check if above the ground (falling)
+                elif self.vel_y >= 0:
                     self.dy = piso[1].top - self.rectangulo_principal.bottom
                     self.vel_y = 0
                     self.esta_en_aire = False
-        print(self.esta_en_aire)
 
 
 
