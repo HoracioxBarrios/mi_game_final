@@ -75,9 +75,9 @@ class Personaje:
         if(not self.esta_en_aire):
             self.esta_en_aire = True
             if(self.orientacion_x == 1):
-                self.desplazamiento_y = -10
+                self.vel_y = -10
             else:
-                self.desplazamiento_y = -10
+                self.vel_y  = -10
 
     def quieto(self):
         if(not self.esta_en_aire):
@@ -87,10 +87,10 @@ class Personaje:
                 self.desplazamiento_x = 0
     def updater(self, screen_height, pisos, screen):
         self.dx = self.desplazamiento_x
-        self.dy = self.desplazamiento_y
+        self.dy = 0
         ###################
         self.vel_y += 1
-        print(self.vel_y)
+        
         ###################
         if self.vel_y > 10:
             self.vel_y = 10
